@@ -115,7 +115,7 @@ def get_emission(e_params, _train_word_count_dict, tag, word):
 
 
 # Final function to predict tags and write into a file
-def prediction(e_params, _train_tag_count_dict, _train_word_count_dict, _input_file, output_file):
+def generate_predictions(e_params, _train_tag_count_dict, _train_word_count_dict, _input_file, output_file):
     for line in input_file:
         if line.rstrip() != "":
             word = line.strip()
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     # Predict and write prediction results
     with open("{}/dev.p2.out".format(file_path), "w+", encoding="utf8") as output_file:
         with open("{}/dev.in".format(file_path), "r", encoding="utf8") as input_file:
-            prediction(fixed_emission_params, train_tag_count_dict, train_word_count_dict, input_file, output_file)
+            generate_predictions(fixed_emission_params, train_tag_count_dict, train_word_count_dict, input_file, output_file)
 
     stop_time = time.time()
     print("Time taken:", stop_time - start_time)
