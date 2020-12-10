@@ -143,12 +143,12 @@ if __name__ == "__main__":
     """
 
     # Test File to get emission parameters (fixed)
-    with open("{}/train".format(file_path), "r") as training_file:
+    with open("{}/train".format(file_path), "r", encoding="utf8") as training_file:
         fixed_emission_params, train_tag_count_dict, train_word_count_dict = get_fixed_emission_params(training_file, k)
 
     # Predict and write prediction results
-    with open("{}/dev.p2.out".format(file_path), "w+") as output_file:
-        with open("{}/dev.in".format(file_path), "r") as input_file:
+    with open("{}/dev.p2.out".format(file_path), "w+", encoding="utf8") as output_file:
+        with open("{}/dev.in".format(file_path), "r", encoding="utf8") as input_file:
             prediction(fixed_emission_params, train_tag_count_dict, train_word_count_dict, input_file, output_file)
 
     stop_time = time.time()
