@@ -151,13 +151,13 @@ def viterbi(_x_seq, _emission_params, _transition_params, _tags_list):
 
 
     # 2. Main Loop
-    for i in range(1, n):  # k -> i
+    for i in range(1, n):
         word = _x_seq[i].strip()
-        for j in range(len(_tags_list)):  # v -> j
+        for j in range(len(_tags_list)):
             max_list = []  # Store the max score values
             arg_list = []  # Store the arg values
 
-            for k in range(len(_tags_list)):  # u -> k
+            for k in range(len(_tags_list)):
 
                 # Dynamically handle the different cases,e.g. if no particular tag in dict
                 try:
