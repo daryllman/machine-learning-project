@@ -1,5 +1,5 @@
 # Machine Learning Project 
-Hidden Markov Model (HMM)
+Text Analysis with Hidden Markov Model (HMM)
 
 **Content**
 1. [Setup](#setup)
@@ -7,7 +7,7 @@ Hidden Markov Model (HMM)
 3. [Training](#training)
 
 ## Setup
-None
+We are not using any externally installed libraries.
 
 ## Evaluation of Prediction Results
 The results of the predictions are located in the respective language folders given by `dev.p2.out`, `dev.p3.out`, `dev.p4.out`, `dev.p5.out`         
