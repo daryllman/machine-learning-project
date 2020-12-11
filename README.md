@@ -87,6 +87,17 @@ ___
 ```
 python Models/part3_viterbi.py EN
 ```
+___
+### Part 4
+```
+python Models/part4_viterbi_modified.py EN
+```
+___
+### Part 5
+Using our designed algorithm - Multi Class Perceptron
+```
+python Models/part5_design_challenge.py EN
+```
 
 
 ___
