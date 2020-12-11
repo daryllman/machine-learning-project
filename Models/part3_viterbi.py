@@ -131,7 +131,7 @@ def viterbi(_x_seq, _emission_params, _transition_params, _tags_list):
         # Dynamically handle the different cases,e.g. if no "START" in dict
         try:
             tr = _transition_params[_tags_list[i]]["START"]
-            #em = EM.get_emission(_emission_params, _x_seq, _tags_list[i], word)  # def get_emission(e_params, _train_word_count_dict, tag, word): train_word_count_dict
+            #em = EM.get_emission(_emission_params, _x_seq, _tags_list[i], word)  # wrong
             em = EM.get_emission(_emission_params, train_word_count_dict, _tags_list[i], word)  # def get_emission(e_params, _train_word_count_dict, tag, word):
 
             if em == 0:
@@ -164,7 +164,7 @@ def viterbi(_x_seq, _emission_params, _transition_params, _tags_list):
                     prev_pi = pi_list[i-1][k]
 
                     tr = _transition_params[_tags_list[j]][_tags_list[k]]
-                    # em = EM.get_emission(_emission_params, _x_seq, _tags_list[j], word)
+                    # em = EM.get_emission(_emission_params, _x_seq, _tags_list[j], word) # wrong
                     em = EM.get_emission(_emission_params, train_word_count_dict, _tags_list[j], word)  # def get_emission(e_params, _train_word_count_dict, tag, word):
 
                     if em == 0:
