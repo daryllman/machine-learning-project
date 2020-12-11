@@ -1,8 +1,7 @@
-from collections import defaultdict
 import sys
 import os
+from collections import defaultdict
 import random
-import string
 
 
 class WordTagger:
@@ -12,30 +11,30 @@ class WordTagger:
         self.classes = tag_counts.keys()  # get keys
         self.weights = defaultdict(lambda: defaultdict(int))
 
-    # features here represent a word, we created a list of features to represent each word
+    # Create list of features to represent each word
+    # Features represent a word
     def predict(self, features):
         if features != "":
             # total score keep track of the score for each tag related to the word
             scores = defaultdict(int)
             for feature in features:
-                # if the particular feature is not found in our model's weights class, we ignore
-                if feature not in self.weights:
+                if feature not in self.weights:  # If the feature is not contained in our model's weights class, ignore
                     continue
                 # else if it is found, select the dictionary for the feature from the weights class
                 weights = self.weights[feature]
-                # we ultimately want to use the tag with the highest score as our prediction, thus we increment it and keep track in a dictionary called scores
+
+                # We want to eventually get the tag with the highest score
+                # Increase count to keep track
                 for tag, weight in weights.items():
                     scores[tag] += weight
-            # we return the tag with the highest score as our prediction
-            return max(self.classes, key=lambda tag: (scores[tag], tag))
+            return max(self.classes, key=lambda tag: (scores[tag], tag))  # Tag with the highest score as our prediction
         return ""
 
     def train(self, iter, document):
         for i in range(iter):
             print("Training for iteration...", i)
 
-
-            # pass in the features and correct tag to predict function
+            # Predict function
             for features, correct_tag in document:
                 predicted_tag = self.predict(features)
                 # update weights only if there is any wrong prediction
@@ -45,7 +44,7 @@ class WordTagger:
                         self.weights[feature][correct_tag] += 1
             random.shuffle(document)
 
-        #averaging perceptron weights
+        # Average perceptron weights
         for feature in self.weights:
             for tag in self.weights[feature]:
                 self.weights[feature][tag] = self.weights[feature][tag] / \
@@ -54,15 +53,16 @@ class WordTagger:
         return self.weights
 
 
-def parse_predict_test_file(fileIn, fileOut, model):
-    fout = open(fileOut, 'w+', encoding="utf8")
-    # list_new_guesses = [""]
-    finput = open(fileIn, 'r', encoding="utf8")
-    lines = finput.readlines()
+def generate_predictions(_input_file, _output_file, model):
+    lines = _input_file.readlines()
 
     output = []
     for i in range(0, len(lines)):
-        # special case for first line: previous and previous previous word features have to be specificially handled since they are null
+
+        # Handle Cases
+        # ____________________________________
+
+        # Case 1 - First line: i-1th and i-2th word features have to be specificially handled since they are null
         if i == 0:
             line = lines[i].strip().split(" ")
             next_line = lines[i+1].strip().split(" ")
@@ -71,8 +71,9 @@ def parse_predict_test_file(fileIn, fileOut, model):
                 line[0], "", "", "", "", next_line[0], next2_line[0])
             guess = model.predict(features)
             output.append(guess)
-            fout.write(line[0]+" "+guess+"\n")
-        # special case for second line: previous word features have to be specifically handled since they are null
+            _output_file.write(line[0]+" "+guess+"\n")
+
+        # Case 2 - Second line: previous word features have to be specifically handled since they are null
         elif i == 1:
             line = lines[i].strip().split(" ")
             next_line = lines[i+1].strip().split(" ")
@@ -84,8 +85,10 @@ def parse_predict_test_file(fileIn, fileOut, model):
                 line[0], prev_word, prev_tag, "", "", next_line[0], next2_line[0])
             guess = model.predict(features)
             output.append(guess)
-            fout.write(line[0]+" "+guess+"\n")
-        # case for the rest of the document (middle case)
+            _output_file.write(line[0]+" "+guess+"\n")
+
+
+        # Case 3 -  for the rest of the document (middle case)
         else:
             if lines[i].strip() != "":
                 # read in current current line
@@ -101,7 +104,7 @@ def parse_predict_test_file(fileIn, fileOut, model):
                 prev2_tag = output[i-2]
                 prev2_word = prev2_line[0]
 
-                # reading and extracting for next 2 line features
+                # read and extract for next 2 line features
                 # special case if we are at the last line of the document:  next word and next next word will be null
                 if i == len(lines)-1:
                     next_word = ""
@@ -123,22 +126,21 @@ def parse_predict_test_file(fileIn, fileOut, model):
                     word, prev_word, prev_tag, prev2_tag, prev2_word, next_word, next2_word)
                 guess = model.predict(features)
                 output.append(guess)
-                fout.write(line[0]+" "+guess+"\n")
+                _output_file.write(line[0]+" "+guess+"\n")
 
             else:
                 output.append("")
-                fout.write("\n")
+                _output_file.write("\n")
 
     return
 
 
-def parse_feature_tag_pairs(folder_path, filename):
+def parse_feature_tag_pairs(_training_file):
     output = []
     output.append(("", ""))
-
     tag_counts = defaultdict(int)
-    finput = open(os.path.join(folder_path, filename), 'r', encoding="utf8")
-    lines = finput.readlines()
+
+    lines = _training_file.readlines()
 
     # handling of special cases is the same as "parse_predict_test_file"
     for i in range(0, len(lines)):
@@ -300,14 +302,16 @@ def get_features(word, prev_word, prev_tag, prev2_tag, prev2_word, next_word, ne
 
 # RUNNING THE CODE
 if __name__ == "__main__":
+    file_path = sys.argv[1]
 
-    dataset = sys.argv[1]
-    fileIn = dataset+"/dev.in"
-    fileOut = dataset+"/dev.p5.out"
+    # Get calculated Emission Parameters
+    with open("{}/train".format(file_path), "r", encoding="utf8") as training_file:
+        output, tag_counts = parse_feature_tag_pairs(training_file)
+        test = WordTagger(tag_counts)
 
-    output, tag_counts = parse_feature_tag_pairs(dataset, 'train')
-    test = WordTagger(tag_counts)
-
-    n = 20 # Set number of iterations to run perceptron
-    model_weights = test.train(n, output)
-    parse_predict_test_file(fileIn, fileOut, test)
+    # Write Predicted Y Sequences to output file
+    with open("{}/dev.p5.out".format(file_path), "w+", encoding="utf8") as output_file:
+        with open("{}/dev.in".format(file_path), "r", encoding="utf8") as input_file:
+            n = 20  # Set number of iterations to run perceptron
+            model_weights = test.train(n, output)
+            generate_predictions(input_file, output_file, test)
