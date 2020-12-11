@@ -50,14 +50,7 @@ Uses `part4_viterbi_modified.py`
 ```
 python EvalScript/evalResult.py EN/dev.out EN/dev.p4.out
 ```
-#### CN
-```
-python EvalScript/evalResult.py CN/dev.out CN/dev.p4.out
-```
-#### SG
-```
-python EvalScript/evalResult.py SG/dev.out SG/dev.p4.out
-```
+
 ___
 ### Part 5
 Uses `part5_design_challenge.py`    
@@ -66,14 +59,7 @@ Implementation of our designed model is explained in greater detail in our repor
 ```
 python EvalScript/evalResult.py EN/dev.out EN/dev.p5.out
 ```
-#### CN
-```
-python EvalScript/evalResult.py CN/dev.out CN/dev.p5.out
-```
-#### SG
-```
-python EvalScript/evalResult.py SG/dev.out SG/dev.p5.out
-```
+
 ___
 ## Training
 The scripts will train and produce prediction results in the respective folders, e.g. EN/dev.p2.out     
